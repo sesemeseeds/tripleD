@@ -1,0 +1,21 @@
+# .gitignore
+
+# Ignore the virtual environment
+venv/
+
+# Ignore Python cache files
+__pycache__/
+*.pyc
+*.pyo
+
+# Ignore Django migrations
+*/migrations/
+
+# Ignore other files/directories
+*.env
+.env
+*.sqlite3
+db.sqlite3
+
+# Ignore node_modules
+frontend/node_modules/
