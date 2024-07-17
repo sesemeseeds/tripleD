@@ -1,1 +1,76 @@
-this where the sql will go
+-- SQL TABLES 
+drop table Product cascade;
+drop table Card cascade;
+drop table ShoppingCart cascade;
+drop table Order cascade;
+drop table customer cascade;
+drop table staff cascade;
+drop table warehouse;
+
+-- create table Product
+create table Product (
+	prodID integer PRIMARY KEY,
+	category VARCHAR,
+	price float,
+	prodType VARCHAR,
+	prodBrand VARCHAR,
+	description VARCHAR,
+	warehouse VARCHAR
+);
+
+-- create table Card
+create table Card (
+	cardID integer PRIMARY KEY,
+	billAddress VARCHAR
+);
+
+-- create table Shopping Cart
+create table Shopping Cart (
+	shopCartID integer PRIMARY KEY,
+	prodID integer,
+	--quantity integer
+	FOREIGN KEY (prodID) REFERENCES Product(prodID)
+);
+
+-- create table Order
+create table Order (
+	orderID integer PRIMARY KEY,
+	prodID integer,
+	-- quant integer
+	orderDate date,
+	status integer(1), -- 3 "status"-es need to be applied, use integer to define differences
+	cardID integer,
+	FOREIGN KEY (prodID) REFERENCES Product(prodID),
+	FOREIGN KEY (cardID) REFERENCES Card(CardID)
+);
+
+-- create table Customer
+create table Customer (
+	accountID integer PRIMARY KEY,
+	shopCartID integer,
+	Cusname VARCHAR,
+	cusAddress VARCHAR,
+	cardID integer,
+	-- quant integer
+	FOREIGN KEY (cardID) REFERENCES Card(CardID),
+	FOREIGN KEY (shopCartID) REFERENCES ShoppingCart(ShopCartID)
+);
+
+-- create table Staff
+create table Staff (
+	staffID integer PRIMARY KEY,
+	staffName VARCHAR,
+	staffAddress VARCHAR,
+	salary integer,
+	job VARCHAR
+);
+
+-- create table Warehouse
+create table Warehouse (
+	address CHARVAR PRIMARY KEY,
+	totalQuantity integer,
+	maxQuantity integer,
+	staffID integer,
+	-- quant integer
+	FOREIGN KEY (staffID) REFERENCES Staff(staffID)
+);
