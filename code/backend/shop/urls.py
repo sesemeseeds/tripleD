@@ -1,12 +1,10 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import ProductViewSet, WarehouseViewSet, home
+from .views import ProductViewSet, WarehouseViewSet, StaffViewSet
 
 router = DefaultRouter()
-router.register(r'products', ProductViewSet)
-router.register(r'warehouses', WarehouseViewSet)
+router.register('products', ProductViewSet)
+router.register('warehouses', WarehouseViewSet)
+router.register('staff', StaffViewSet)
 
-urlpatterns = [
-    path('', home, name='home'),
-    path('api/', include(router.urls)),
-]
+urlpatterns = router.urls
