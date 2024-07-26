@@ -1,17 +1,46 @@
 from django.db import models
 
+class Warehouse(models.Model):
+    WAREHOUSE_CHOICES = [
+        ('123 Main St, Cincinnati, OH', '123 Main St, Cincinnati, OH'),
+        ('5323 Elm St, Spookane, WA', '5323 Elm St, Spookane, WA'),
+        ('69420 Vine St, Poopietown, GA', '69420 Vine St, Poopietown, GA'),
+    ]
+    
+    address = models.CharField(max_length=255, choices=WAREHOUSE_CHOICES, primary_key=True)
+    totalQuantity = models.IntegerField()
+    maxQuantity = models.IntegerField()
+    staffID = models.ForeignKey('Staff', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.address
+
 class Product(models.Model):
+    CATEGORY_CHOICES = [
+        ('Food', 'Food'),
+        ('Clothing', 'Clothing'),
+        ('Toys', 'Toys'),
+        ('Electronics', 'Electronics'),
+        ('Home & Kitchen', 'Home & Kitchen'),
+        ('Beauty & Personal Care', 'Beauty & Personal Care'),
+        ('Sports', 'Sports'),
+        ('Health', 'Health'),
+        ('Books & Media', 'Books & Media'),
+        ('Automotive', 'Automotive'),
+        ('Office', 'Office'),
+        ('Pet Supplies', 'Pet Supplies'),
+    ]
+    
     prodID = models.AutoField(primary_key=True)
-    category = models.CharField(max_length=255)
+    category = models.CharField(max_length=255, choices=CATEGORY_CHOICES)
     price = models.FloatField()
     prodType = models.CharField(max_length=255)
     prodBrand = models.CharField(max_length=255)
     description = models.TextField()
-    warehouse = models.CharField(max_length=255)
+    warehouse = models.ForeignKey(Warehouse, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.prodBrand
-
 
 class Card(models.Model):
     cardID = models.AutoField(primary_key=True)
@@ -20,14 +49,12 @@ class Card(models.Model):
     def __str__(self):
         return str(self.cardID)
 
-
 class ShoppingCart(models.Model):
     shopCartID = models.AutoField(primary_key=True)
     prodID = models.ForeignKey(Product, on_delete=models.CASCADE)
 
     def __str__(self):
         return str(self.shopCartID)
-
 
 class Orders(models.Model):
     orderID = models.AutoField(primary_key=True)
@@ -39,7 +66,6 @@ class Orders(models.Model):
     def __str__(self):
         return str(self.orderID)
 
-
 class Customer(models.Model):
     accountID = models.AutoField(primary_key=True)
     shopCartID = models.ForeignKey(ShoppingCart, on_delete=models.CASCADE)
@@ -50,7 +76,6 @@ class Customer(models.Model):
     def __str__(self):
         return self.Cusname
 
-
 class Staff(models.Model):
     staffID = models.AutoField(primary_key=True)
     staffName = models.CharField(max_length=255)
@@ -60,13 +85,3 @@ class Staff(models.Model):
 
     def __str__(self):
         return self.staffName
-
-
-class Warehouse(models.Model):
-    address = models.CharField(primary_key=True, max_length=255)
-    totalQuantity = models.IntegerField()
-    maxQuantity = models.IntegerField()
-    staffID = models.ForeignKey(Staff, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return self.address
