@@ -3,7 +3,7 @@
     flex-direction: column;
     height: 100vh;
     width: 100%;
-  }
+}
 
 .staff-header {
     display: flex;
@@ -13,7 +13,7 @@
     color: black;
     padding: 20px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
+    }
 
 .staff-container h1 {
     font-size: 2rem;
@@ -33,7 +33,7 @@
 .orange {
     color: #FF9900;
 }
-  
+
 .black {
     color: black;
 }
@@ -42,22 +42,22 @@
     height: 50px;
     width: auto;
     margin-left: 10px;
-  }
-  
+}
+
 .staff-content {
     display: flex;
     height: 95%;
 }
 
 .left-section {
-    width: 50%;
+    width: 30%;
     height: 100%;
     padding: 20px;
     box-sizing: border-box;
 }
 
 .right-section {
-    width: 50%;
+    width: 70%;
     height: 100%;
     padding: 20px;
     box-sizing: border-box;
@@ -75,6 +75,15 @@
     padding: 8px;
     border: 1px solid #ddd;
     border-radius: 4px;
+    width: 100%;
+    box-sizing: border-box;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.product-form input[type="text"] {
+min-width: 200px;
 }
 
 .product-form button {
@@ -84,22 +93,46 @@
     border: none;
     border-radius: 4px;
     cursor: pointer;
+    }
+
+.product-table {
+    width: 100%;
+    border-collapse: collapse;
 }
 
-.product-list {
-    display: flex;
-    flex-direction: column;
+.product-table th,
+.product-table td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
 }
 
-.product-list div {
-    margin-bottom: 10px;
+.product-table th {
+    background-color: #f4f4f4;
 }
 
-.product-list button {
+.product-table button {
     padding: 5px;
     background-color: #dc3545;
     color: white;
     border: none;
     border-radius: 4px;
     cursor: pointer;
+}
+
+.product-table .edit-button {
+    background-color: #6f42c1;
+    color: white;
+    margin-right: 10px;
+}
+
+.product-table .delete-button {
+    background-color: #dc3545;
+    color: white;
+}
+
+.warning-message {
+    color: yellow;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
 }

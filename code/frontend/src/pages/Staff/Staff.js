@@ -3,6 +3,7 @@ import axios from 'axios';
 import './Staff.css';
 import { useNavigate } from 'react-router-dom';
 import logo from '../../tripleD_logo.png';
+import ProductEditModal from './dialogs/ProductEditModal/ProductEditModal';
 
 const Staff = () => {
   const [products, setProducts] = useState([]);
@@ -18,6 +19,8 @@ const Staff = () => {
     warehouse: '',
     quantity: ''
   });
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingProduct, setEditingProduct] = useState(null);
 
   const navigate = useNavigate();
 
@@ -46,7 +49,6 @@ const Staff = () => {
   };
 
   const fetchCategories = async () => {
-    // Example categories array, you might need to fetch it from API or use a static list
     setCategories([
       'Food', 'Clothing', 'Toys', 'Electronics', 'Home & Kitchen',
       'Beauty & Personal Care', 'Sports', 'Health', 'Books & Media',
@@ -87,18 +89,29 @@ const Staff = () => {
     }
   };
 
-  const handleUpdateProduct = async (id, updatedProduct) => {
+  const handleEditProduct = (product) => {
+    setEditingProduct(product);
+    setIsModalOpen(true);
+  };
+
+  const handleSaveProduct = async (updatedProduct) => {
     try {
-      await axios.put(`http://localhost:8000/products/${id}/`, updatedProduct);
+      await axios.put(`http://localhost:8000/products/${updatedProduct.prodID}/`, updatedProduct);
       fetchProducts();
+      setIsModalOpen(false);
     } catch (error) {
       console.error('Error updating product:', error);
     }
   };
 
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setEditingProduct(null);
+  };
+
   return (
     <div className="staff-container">
-      {/* Top Section */}
+      {/* Top Bar */}
       <header className="staff-header">
         <h1 className="page-title">Staff Page</h1>
         <h1 className="site-title" onClick={() => navigate('/')}>
@@ -109,7 +122,7 @@ const Staff = () => {
       </header>
       {/* Main Content */}
       <div className="staff-content">
-        {/* Left Section */}
+        {/* Add Product Section */}
         <div className="left-section">
           <div className="product-form">
             <h2>Add New Product</h2>
@@ -175,20 +188,61 @@ const Staff = () => {
             <button onClick={handleAddProduct}>Add Product</button>
           </div>
         </div>
-        {/* Right Section */}
+        {/* Product List Section */}
         <div className="right-section">
-          <div className="product-list">
-            <h2>Products</h2>
-            {products.map((product) => (
-              <div key={product.prodID}>
-                <p>{product.prodName}</p>
-                <button onClick={() => handleDeleteProduct(product.prodID)}>Delete</button>
-                {/* Add update functionality here if needed */}
-              </div>
-            ))}
-          </div>
+          <h2>Products</h2>
+          <table className="product-table">
+            <thead>
+              <tr>
+                <th>Product Name</th>
+                <th>Brand</th>
+                <th>Description</th>
+                <th>Category</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Warehouse</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {products.map((product) => (
+                <tr key={product.prodID}>
+                  <td>{product.prodName}</td>
+                  <td>{product.prodBrand}</td>
+                  <td>{product.prodDescription}</td>
+                  <td>{product.prodCategory}</td>
+                  <td>{product.price}</td>
+                  <td>{product.quantity}</td>
+                  <td>{product.warehouse}</td>
+                  <td>
+                    <button 
+                      className="edit-button"
+                      onClick={() => handleEditProduct(product)}
+                    >
+                      Edit
+                    </button>
+                    <button 
+                      className="delete-button"
+                      onClick={() => handleDeleteProduct(product.prodID)}
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
+      {isModalOpen && (
+        <ProductEditModal
+          product={editingProduct}
+          warehouses={warehouses}
+          categories={categories}
+          onClose={handleCloseModal}
+          onSave={handleSaveProduct}
+        />
+      )}
     </div>
   );
 };
