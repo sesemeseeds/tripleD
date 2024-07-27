@@ -1,0 +1,51 @@
+.order-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.order-modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 400px;
+}
+
+.order-modal h2 {
+    margin-top: 0;
+}
+
+.order-modal label {
+    display: block;
+    margin-bottom: 10px;
+}
+
+.order-modal select {
+    width: 100%;
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+}
+
+.order-modal button {
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.order-modal button:first-of-type {
+    background-color: #007bff;
+    color: white;
+}
+
+.order-modal button:last-of-type {
+    background-color: #ccc;
+}

@@ -11,9 +11,10 @@
     align-items: center;
     background-color: white;
     color: black;
-    padding: 20px;
+    padding: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    }
+    height: 10%;
+}
 
 .staff-container h1 {
     font-size: 2rem;
@@ -137,43 +138,43 @@ min-width: 200px;
     margin-top: 20px;
   }
   
-  .warehouse-table th,
-  .warehouse-table td {
+.warehouse-table th,
+.warehouse-table td {
     padding: 10px;
     border: 1px solid #ddd;
-  }
-  
-  .warehouse-table th {
+    }
+
+.warehouse-table th {
     background-color: #f2f2f2;
     text-align: center;
-  }
-  
-  .warehouse-table td:nth-child(1) {
-    text-align: left;
-  }
-  
-  .warehouse-table td:nth-child(2),
-  .warehouse-table td:nth-child(3) {
-    text-align: center;
-  }
-  
-  .warehouse-table th:not(:last-child),
-  .warehouse-table td:not(:last-child) {
-    padding-right: 20px; 
-  }
+    }
 
-  .add-product-button {
-  background-color: #4CAF50; /* Green */
-  color: white;
-  border: none;
-  padding: 15px 32px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
-  margin: 4px 2px;
-  cursor: pointer;
-  border-radius: 4px;
+.warehouse-table td:nth-child(1) {
+    text-align: left;
+    }
+
+.warehouse-table td:nth-child(2),
+.warehouse-table td:nth-child(3) {
+    text-align: center;
+    }
+
+.warehouse-table th:not(:last-child),
+.warehouse-table td:not(:last-child) {
+    padding-right: 20px; 
+    }
+
+.add-product-button {
+    background-color: #4CAF50; /* Green */
+    color: white;
+    border: none;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 4px;
 }
 
 .add-product-button.disabled {
@@ -185,9 +186,3 @@ min-width: 200px;
   background-color: grey; /* Grey */
   cursor: not-allowed;
 }
-
-.warning-message {
-    color: orange;
-    font-size: 14px;
-    margin-top: 10px;
-  }
