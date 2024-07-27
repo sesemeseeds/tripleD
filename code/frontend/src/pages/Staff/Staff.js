@@ -187,6 +187,28 @@ const Staff = () => {
             </select>
             <button onClick={handleAddProduct}>Add Product</button>
           </div>
+          {/* Warehouse Information Section */}
+          <div className="warehouse-info">
+            <h2>Warehouse Information</h2>
+            <table className="warehouse-table">
+              <thead>
+                <tr>
+                  <th>Address</th>
+                  <th>Stock</th>
+                  <th>Max</th>
+                </tr>
+              </thead>
+              <tbody>
+                {warehouses.map((warehouse) => (
+                  <tr key={warehouse.address}>
+                    <td>{warehouse.address}</td>
+                    <td>{warehouse.totalQuantity}</td>
+                    <td>{warehouse.maxQuantity}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
         {/* Product List Section */}
         <div className="right-section">
