@@ -12,7 +12,6 @@ const Staff = () => {
   const [newProduct, setNewProduct] = useState({
     prodName: '',
     price: '',
-    prodType: '',
     prodBrand: '',
     prodDescription: '',
     prodCategory: '',
@@ -62,21 +61,47 @@ const Staff = () => {
   };
 
   const handleAddProduct = async () => {
-    try {
-      await axios.post('http://localhost:8000/products/', newProduct);
-      fetchProducts();
-      setNewProduct({
-        prodName: '',
-        price: '',
-        prodType: '',
-        prodBrand: '',
-        prodDescription: '',
-        prodCategory: '',
-        warehouse: '',
-        quantity: ''
-      });
-    } catch (error) {
-      console.error('Error adding product:', error);
+    const selectedWarehouse = warehouses.find(
+      (warehouse) => warehouse.address === newProduct.warehouse
+    );
+
+    if (selectedWarehouse) {
+      const newQuantity = parseInt(newProduct.quantity, 10);
+      const availableSpace = selectedWarehouse.maxQuantity - selectedWarehouse.totalQuantity;
+
+      if (newQuantity > availableSpace) {
+        alert('Error: Quantity exceeds warehouse capacity.');
+        return;
+      }
+
+      try {
+        await axios.post('http://localhost:8000/products/', newProduct);
+
+        // Update the warehouse totalQuantity
+        const updatedWarehouse = {
+          ...selectedWarehouse,
+          totalQuantity: selectedWarehouse.totalQuantity + newQuantity
+        };
+        await axios.put(`http://localhost:8000/warehouses/${selectedWarehouse.address}/`, updatedWarehouse);
+
+        // Fetch updated data
+        fetchProducts();
+        fetchWarehouses();
+
+        setNewProduct({
+          prodName: '',
+          price: '',
+          prodBrand: '',
+          prodDescription: '',
+          prodCategory: '',
+          warehouse: '',
+          quantity: ''
+        });
+      } catch (error) {
+        console.error('Error adding product:', error);
+      }
+    } else {
+      alert('Error: Warehouse not found.');
     }
   };
 
@@ -108,7 +133,14 @@ const Staff = () => {
     setIsModalOpen(false);
     setEditingProduct(null);
   };
-
+  
+  const isFormComplete = () => {
+    const formValues = Object.values(newProduct);
+    console.log('Form Values:', formValues);
+    const isComplete = formValues.every(value => value.trim() !== '');
+    console.log('Is Form Complete:', isComplete);
+    return isComplete;
+  };
   return (
     <div className="staff-container">
       {/* Top Bar */}
@@ -185,7 +217,13 @@ const Staff = () => {
                 </option>
               ))}
             </select>
-            <button onClick={handleAddProduct}>Add Product</button>
+            <button 
+              onClick={handleAddProduct}
+              disabled={!isFormComplete()}
+              className={`add-product-button ${!isFormComplete() ? 'disabled' : ''}`}
+            >
+              Add Product
+            </button>
           </div>
           {/* Warehouse Information Section */}
           <div className="warehouse-info">
@@ -193,17 +231,17 @@ const Staff = () => {
             <table className="warehouse-table">
               <thead>
                 <tr>
-                  <th>Address</th>
-                  <th>Stock</th>
-                  <th>Max</th>
+                  <th className="left-align">Address</th>
+                  <th className="center-align">Stock</th>
+                  <th className="center-align">Max</th>
                 </tr>
               </thead>
               <tbody>
                 {warehouses.map((warehouse) => (
-                  <tr key={warehouse.address}>
-                    <td>{warehouse.address}</td>
-                    <td>{warehouse.totalQuantity}</td>
-                    <td>{warehouse.maxQuantity}</td>
+                  <tr key={warehouse.id}>
+                    <td className="left-align">{warehouse.address}</td>
+                    <td className="center-align">{warehouse.totalQuantity}</td>
+                    <td className="center-align">{warehouse.maxQuantity}</td>
                   </tr>
                 ))}
               </tbody>
@@ -216,27 +254,27 @@ const Staff = () => {
           <table className="product-table">
             <thead>
               <tr>
-                <th>Product Name</th>
-                <th>Brand</th>
-                <th>Description</th>
-                <th>Category</th>
-                <th>Price</th>
-                <th>Quantity</th>
-                <th>Warehouse</th>
-                <th>Actions</th>
+                <th className="left-align">Product Name</th>
+                <th className="left-align">Brand</th>
+                <th className="left-align">Description</th>
+                <th className="left-align">Category</th>
+                <th className="center-align">Price</th>
+                <th className="center-align">Quantity</th>
+                <th className="left-align">Warehouse</th>
+                <th className="center-align">Actions</th>
               </tr>
             </thead>
             <tbody>
               {products.map((product) => (
                 <tr key={product.prodID}>
-                  <td>{product.prodName}</td>
-                  <td>{product.prodBrand}</td>
-                  <td>{product.prodDescription}</td>
-                  <td>{product.prodCategory}</td>
-                  <td>{product.price}</td>
-                  <td>{product.quantity}</td>
-                  <td>{product.warehouse}</td>
-                  <td>
+                  <td className="left-align">{product.prodName}</td>
+                  <td className="left-align">{product.prodBrand}</td>
+                  <td className="left-align">{product.prodDescription}</td>
+                  <td className="left-align">{product.prodCategory}</td>
+                  <td className="center-align">{product.price}</td>
+                  <td className="center-align">{product.quantity}</td>
+                  <td className="left-align">{product.warehouse}</td>
+                  <td className="center-align">
                     <button 
                       className="edit-button"
                       onClick={() => handleEditProduct(product)}

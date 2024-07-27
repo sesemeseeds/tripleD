@@ -161,4 +161,33 @@ min-width: 200px;
   .warehouse-table td:not(:last-child) {
     padding-right: 20px; 
   }
-  
+
+  .add-product-button {
+  background-color: #4CAF50; /* Green */
+  color: white;
+  border: none;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.add-product-button.disabled {
+  background-color: grey; /* Grey */
+  cursor: not-allowed;
+}
+
+.add-product-button:disabled {
+  background-color: grey; /* Grey */
+  cursor: not-allowed;
+}
+
+.warning-message {
+    color: orange;
+    font-size: 14px;
+    margin-top: 10px;
+  }
