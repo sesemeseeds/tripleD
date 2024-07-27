@@ -32,11 +32,12 @@ class Product(models.Model):
     ]
     
     prodID = models.AutoField(primary_key=True)
-    category = models.CharField(max_length=255, choices=CATEGORY_CHOICES)
-    price = models.FloatField()
-    prodType = models.CharField(max_length=255)
+    prodName = models.CharField(max_length=255)
     prodBrand = models.CharField(max_length=255)
-    description = models.TextField()
+    prodDescription = models.TextField()
+    prodCategory = models.CharField(max_length=255, choices=CATEGORY_CHOICES)
+    price = models.FloatField()
+    quantity = models.IntegerField()
     warehouse = models.ForeignKey(Warehouse, on_delete=models.CASCADE)
 
     def __str__(self):
