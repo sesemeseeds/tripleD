@@ -3,66 +3,148 @@ import axios from 'axios';
 import './Customer.css';
 import logo from '../../tripleD_logo.png';
 import OrderModal from './dialogs/OrderModal/OrderModal';
+import ManageCardsModal from './dialogs/ManageCardsModal/ManageCardsModal';
 import { useNavigate } from 'react-router-dom';
-import { ReactComponent as SearchIcon } from './icons/search.svg'
+import { ReactComponent as SearchIcon } from './icons/search.svg';
 
 const Customer = () => {
-  const [products, setProducts] = useState([]);
+  const [prods, setProds] = useState([]);
+  const [filteredProds, setFilteredProds] = useState([]);
   const [cart, setCart] = useState([]);
   const [addresses, setAddresses] = useState([]);
-  const [creditCards, setCreditCards] = useState([]);
-  const [selectedAddress, setSelectedAddress] = useState('');
-  const [selectedCard, setSelectedCard] = useState('');
-  const [isOrderModalOpen, setIsOrderModalOpen] = useState(false);
+  const [cards, setCards] = useState([]);
+  const [orderModalOpen, setOrderModalOpen] = useState(false);
+  const [manageCardsModalOpen, setManageCardsModalOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [categories] = useState([
+    'Food', 'Clothing', 'Toys', 'Electronics', 'Home & Kitchen',
+    'Beauty & Personal Care', 'Sports', 'Health', 'Books & Media',
+    'Automotive', 'Office', 'Pet Supplies'
+  ]);
+  const [selectedCat, setSelectedCat] = useState('All');
+  const [balance, setBalance] = useState(0); 
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetchProducts();
+    fetchProds();
     fetchAddresses();
-    fetchCreditCards();
+    fetchCards();
   }, []);
 
-  const fetchProducts = async () => {
+  useEffect(() => {
+    filterProds();
+  }, [searchQuery, selectedCat, prods]);
+
+  const fetchProds = async () => {
     try {
-      const response = await axios.get('http://localhost:8000/products/');
-      setProducts(response.data);
+      const { data } = await axios.get('http://localhost:8000/products/');
+      setProds(data);
     } catch (error) {
       console.error('Error fetching products:', error);
     }
   };
 
   const fetchAddresses = async () => {
-    // Fetch addresses for the customer
+    try {
+      const { data } = await axios.get('http://localhost:8000/addresses/');
+      setAddresses(data);
+    } catch (error) {
+      console.error('Error fetching addresses:', error);
+    }
   };
 
-  const fetchCreditCards = async () => {
-    // Fetch credit cards for the customer
+  const fetchCards = async () => {
+    try {
+      const { data } = await axios.get('http://localhost:8000/card/');
+      setCards(data);
+    } catch (error) {
+      console.error('Error fetching cards:', error);
+    }
   };
 
-  const handleAddToCart = (product) => {
-    // Add product to the cart
+  const filterProds = () => {
+    let filtered = prods.filter(p =>
+      p.prodName.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
+    if (selectedCat !== 'All') {
+      filtered = filtered.filter(p => p.prodCategory === selectedCat);
+    }
+
+    setFilteredProds(filtered);
   };
 
-  const handleRemoveFromCart = (productId) => {
-    // Remove product from the cart
+  const addToCart = (prod) => {
+    setCart(prevCart => {
+      const existing = prevCart.find(item => item.prodID === prod.prodID);
+      if (existing) {
+        return prevCart.map(item =>
+          item.prodID === prod.prodID
+            ? { ...item, quantity: item.quantity + 1 }
+            : item
+        );
+      }
+      return [...prevCart, { ...prod, quantity: 1 }];
+    });
   };
 
-  const handleQuantityChange = (productId, quantity) => {
-    // Update quantity of product in the cart
+  const removeFromCart = (prodID) => {
+    setCart(prevCart => prevCart.filter(item => item.prodID !== prodID));
   };
 
-  const handleOrderSubmit = async () => {
-    // Submit order and update warehouse inventory
+  const updateQuantity = (prodID, qty) => {
+    setCart(prevCart =>
+      prevCart.map(item =>
+        item.prodID === prodID
+          ? { ...item, quantity: Number(qty) }
+          : item
+      )
+    );
   };
 
-  const handleCloseOrderModal = () => {
-    setIsOrderModalOpen(false);
+  const submitOrder = async (orderDetails) => {
+    try {
+      // Submit order to backend
+      await axios.post('http://localhost:8000/orders/', orderDetails);
+
+      // Update customer balance
+      const totalCost = cart.reduce((total, item) => total + item.price * item.quantity, 0);
+      setBalance(prevBalance => prevBalance + totalCost);
+
+      // Update product quantities in warehouse
+      for (const item of cart) {
+        await axios.put(`http://localhost:8000/products/${item.prodID}/update_quantity/`, {
+          quantity: item.quantity
+        });
+      }
+
+      // Clear cart and close order modal
+      setCart([]);
+      setOrderModalOpen(false);
+      fetchProds(); // Refresh products to get updated quantities
+
+    } catch (error) {
+      console.error('Error submitting order:', error);
+    }
   };
+
+  const closeOrderModal = () => {
+    setOrderModalOpen(false);
+  };
+
+  const openManageCardsModal = () => {
+    setManageCardsModalOpen(true);
+  };
+
+  const closeManageCardsModal = () => {
+    setManageCardsModalOpen(false);
+  };
+
+  const formatCurrency = (amount) => amount.toFixed(2);
 
   return (
     <div className="customer-container">
-      {/* Top Bar */}
       <header className="customer-header">
         <h1 className="page-title">Customer Page</h1>
         <h1 className="site-title" onClick={() => navigate('/')}>
@@ -72,11 +154,8 @@ const Customer = () => {
         </h1>
       </header>
 
-      {/* Main Content */}
       <div className="customer-content">
-        {/* Content Layout */}
         <div className="content-layout">
-          {/* Shopping Cart */}
           <div className="shopping-cart">
             <h2>Shopping Cart</h2>
             <table>
@@ -95,13 +174,18 @@ const Customer = () => {
                     <td>
                       <input
                         type="number"
+                        className="quantity-input"
                         value={item.quantity}
-                        onChange={(e) => handleQuantityChange(item.prodID, e.target.value)}
+                        min="1"
+                        onChange={(e) => updateQuantity(item.prodID, e.target.value)}
                       />
                     </td>
-                    <td>${item.price}</td>
+                    <td>${formatCurrency(item.price)}</td>
                     <td>
-                      <button onClick={() => handleRemoveFromCart(item.prodID)}>
+                      <button
+                        className="remove-button"
+                        onClick={() => removeFromCart(item.prodID)}
+                      >
                         Remove
                       </button>
                     </td>
@@ -110,30 +194,51 @@ const Customer = () => {
               </tbody>
             </table>
             <div className="cart-summary">
-              <p>Total Cost: ${cart.reduce((total, item) => total + item.price * item.quantity, 0)}</p>
-              <button onClick={() => setIsOrderModalOpen(true)}>
+              <p>Total Cost: ${formatCurrency(cart.reduce((total, item) => total + item.price * item.quantity, 0))}</p>
+              <p>Customer Balance: ${formatCurrency(balance)}</p>
+              <button
+                className="checkout-button"
+                onClick={() => setOrderModalOpen(true)}
+              >
                 Checkout
               </button>
             </div>
           </div>
 
-          {/* Product Search and Browse */}
           <div className="product-search">
-          <h2>Products</h2>
+            <h2>Products</h2>
             <div className="search-container">
-              <SearchIcon className="search-icon"/>
+              <SearchIcon className="search-icon" />
               <input
                 type="text"
                 placeholder="Search for products"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
               />
+              <select
+                className="sort-dropdown"
+                value={selectedCat}
+                onChange={(e) => setSelectedCat(e.target.value)}
+              >
+                <option value="All">All</option>
+                {categories.map(cat => (
+                  <option key={cat} value={cat}>
+                    {cat}
+                  </option>
+                ))}
+              </select>
             </div>
             <div className="product-catalog">
-              {products.map(product => (
-                <div key={product.prodID} className="product-item">
-                  <h2>{product.prodName}</h2>
-                  <p>{product.prodDescription}</p>
-                  <p>${product.price}</p>
-                  <button onClick={() => handleAddToCart(product)}>
+              {filteredProds.map(prod => (
+                <div key={prod.prodID} className="product-item">
+                  <h2>{prod.prodName}</h2>
+                  <p>{prod.prodDescription}</p>
+                  <p>${formatCurrency(prod.price)}</p>
+                  <p className="quantity-left">Quantity Left: {prod.quantity}</p>
+                  <button
+                    className="add-to-cart-button"
+                    onClick={() => addToCart(prod)}
+                  >
                     Add to Cart
                   </button>
                 </div>
@@ -142,20 +247,32 @@ const Customer = () => {
           </div>
         </div>
 
-        {/* Address and Credit Card Management */}
-        <div className="management-section">
-          <h2>Manage Addresses and Credit Cards</h2>
-          {/* Address and Credit Card management components */}
+        <div className="management-buttons">
+          <button
+            className="manage-cards-button"
+            onClick={openManageCardsModal}
+          >
+            Manage Cards
+          </button>
         </div>
       </div>
 
-      {isOrderModalOpen && (
+      {orderModalOpen && (
         <OrderModal
           cart={cart}
           addresses={addresses}
-          creditCards={creditCards}
-          onClose={handleCloseOrderModal}
-          onOrderSubmit={handleOrderSubmit}
+          creditCards={cards}
+          onClose={closeOrderModal}
+          onOrderSubmit={submitOrder}
+        />
+      )}
+
+      {manageCardsModalOpen && (
+        <ManageCardsModal
+          isOpen={manageCardsModalOpen}
+          onClose={closeManageCardsModal}
+          cards={cards}
+          setCards={setCards}
         />
       )}
     </div>

@@ -45,17 +45,11 @@ class Product(models.Model):
 
 class Card(models.Model):
     cardID = models.AutoField(primary_key=True)
+    cardNumber = models.CharField(max_length=16)
     billAddress = models.CharField(max_length=255)
 
     def __str__(self):
         return str(self.cardID)
-
-class ShoppingCart(models.Model):
-    shopCartID = models.AutoField(primary_key=True)
-    prodID = models.ForeignKey(Product, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return str(self.shopCartID)
 
 class Orders(models.Model):
     orderID = models.AutoField(primary_key=True)
@@ -69,8 +63,7 @@ class Orders(models.Model):
 
 class Customer(models.Model):
     accountID = models.AutoField(primary_key=True)
-    shopCartID = models.ForeignKey(ShoppingCart, on_delete=models.CASCADE)
-    Cusname = models.CharField(max_length=255)
+    cusName = models.CharField(max_length=255)
     cusAddress = models.CharField(max_length=255)
     cardID = models.ForeignKey(Card, on_delete=models.CASCADE)
 

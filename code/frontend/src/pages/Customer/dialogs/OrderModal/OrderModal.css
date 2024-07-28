@@ -4,48 +4,48 @@
     left: 0;
     width: 100%;
     height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
     display: flex;
-    justify-content: center;
     align-items: center;
-    background: rgba(0, 0, 0, 0.5);
-}
-
-.order-modal-content {
-    background: white;
+    justify-content: center;
+  }
+  
+  .order-modal-content {
+    background-color: white;
     padding: 20px;
     border-radius: 8px;
-    width: 400px;
-}
-
-.order-modal h2 {
+    width: 60%;
+    max-width: 500px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .order-modal-content h2 {
     margin-top: 0;
-}
-
-.order-modal label {
+  }
+  
+  .order-modal-content label {
     display: block;
-    margin-bottom: 10px;
-}
-
-.order-modal select {
+    margin: 15px 0;
+  }
+  
+  .order-modal-content select {
     width: 100%;
     padding: 8px;
-    border-radius: 4px;
-    border: 1px solid #ddd;
-}
-
-.order-modal button {
-    padding: 10px;
+    margin-top: 5px;
+  }
+  
+  .order-modal-content button {
+    padding: 10px 15px;
     border: none;
     border-radius: 4px;
     margin-right: 10px;
     cursor: pointer;
-}
-
-.order-modal button:first-of-type {
     background-color: #007bff;
     color: white;
-}
-
-.order-modal button:last-of-type {
+  }
+  
+  .order-modal-content button:last-of-type {
     background-color: #ccc;
-}
+    color: black;
+  }
+  

@@ -136,7 +136,7 @@
     align-items: center;
     border: 1px solid #ddd;
     border-radius: 4px;
-    padding: 5px;
+    padding: 2px;
 }
   
 .search-icon {
@@ -150,3 +150,99 @@
     padding: 8px;
     flex-grow: 1;
 }
+
+.search-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.search-icon {
+    height: 20px;
+    margin-right: 10px;
+}
+
+.product-search input {
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    width: 200px;
+    box-sizing: border-box;
+}
+
+.sort-dropdown {
+    margin-left: 10px;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+/* Customer.css */
+
+.add-to-cart-button,
+.checkout-button {
+  background-color: #FF9900;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.add-to-cart-button:hover,
+.checkout-button:hover {
+  background-color: #e68a00;
+}
+/* Customer.css */
+
+/* Existing styles */
+
+.manage-cards-button,
+.manage-addresses-button {
+  background-color: #6f42c1;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-right: 10px; /* Space between buttons */
+}
+
+.manage-cards-button:hover,
+.manage-addresses-button:hover {
+  background-color: #5a2d91; /* Darker shade on hover */
+}
+
+.management-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px; 
+  position: absolute;
+  top: 100px;
+  right: 10px;
+}
+
+/* Add this to Customer.css */
+
+.remove-button {
+    background-color: #dc3545; /* Red color */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .remove-button:hover {
+    background-color: #c82333; /* Darker red on hover */
+  }
+  
+  .cart-summary p {
+    margin: 5px 0;
+  }
+  
+  .quantity-input {
+    width: 50px;
+  }
+  
