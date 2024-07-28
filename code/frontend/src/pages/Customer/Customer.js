@@ -23,6 +23,8 @@ const Customer = () => {
   ]);
   const [selectedCat, setSelectedCat] = useState('All');
   const [balance, setBalance] = useState(0); 
+  const [warehouses, setWarehouses] = useState([]);
+
 
   const navigate = useNavigate();
 
@@ -30,6 +32,7 @@ const Customer = () => {
     fetchProds();
     fetchAddresses();
     fetchCards();
+    fetchWarehouses();
   }, []);
 
   useEffect(() => {
@@ -103,31 +106,59 @@ const Customer = () => {
     );
   };
 
-  const submitOrder = async (orderDetails) => {
+  const fetchWarehouses = async () => {
     try {
-      // Submit order to backend
-      await axios.post('http://localhost:8000/orders/', orderDetails);
+      const response = await axios.get('http://localhost:8000/warehouses/');
+      setWarehouses(response.data);
+    } catch (error) {
+      console.error('Error fetching warehouses:', error);
+    }
+  };
 
-      // Update customer balance
+
+  const submitOrder = async (selectedCard) => {
+    try {
       const totalCost = cart.reduce((total, item) => total + item.price * item.quantity, 0);
       setBalance(prevBalance => prevBalance + totalCost);
-
-      // Update product quantities in warehouse
+  
       for (const item of cart) {
-        await axios.put(`http://localhost:8000/products/${item.prodID}/update_quantity/`, {
-          quantity: item.quantity
+        const updatedQuantity = prods.find(prod => prod.prodID === item.prodID).quantity - item.quantity;
+        await axios.put(`http://localhost:8000/products/${item.prodID}/`, {
+          prodName: item.prodName,
+          price: item.price,
+          prodBrand: item.prodBrand,
+          prodDescription: item.prodDescription,
+          prodCategory: item.prodCategory,
+          warehouse: item.warehouse,
+          quantity: updatedQuantity
         });
       }
-
+  
+      for (const item of cart) {
+        const selectedWarehouseAddress = item.warehouse;
+        const currentWarehouse = warehouses.find(w => w.address === selectedWarehouseAddress);
+  
+        if (currentWarehouse) {
+          const updatedWarehouseQuantity = currentWarehouse.totalQuantity - item.quantity;
+          const encodedAddress = encodeURIComponent(selectedWarehouseAddress); // Encode the address
+  
+          await axios.put(`http://localhost:8000/warehouses/${encodedAddress}/`, {
+            ...currentWarehouse, // Spread existing warehouse data
+            totalQuantity: updatedWarehouseQuantity
+          });
+        }
+      }
+  
       // Clear cart and close order modal
       setCart([]);
       setOrderModalOpen(false);
       fetchProds(); // Refresh products to get updated quantities
-
+  
     } catch (error) {
       console.error('Error submitting order:', error);
     }
   };
+  
 
   const closeOrderModal = () => {
     setOrderModalOpen(false);
@@ -260,7 +291,6 @@ const Customer = () => {
       {orderModalOpen && (
         <OrderModal
           cart={cart}
-          addresses={addresses}
           creditCards={cards}
           onClose={closeOrderModal}
           onOrderSubmit={submitOrder}

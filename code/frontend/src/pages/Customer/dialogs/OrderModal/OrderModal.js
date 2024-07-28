@@ -1,12 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './OrderModal.css';
 
 const OrderModal = ({ cart, creditCards, onClose, onOrderSubmit }) => {
   const [selectedCard, setSelectedCard] = useState('');
   const [deliveryOption, setDeliveryOption] = useState('standard');
 
+  useEffect(() => {
+    console.log('creditCards:', creditCards); // Log creditCards prop to check data structure
+  }, [creditCards]);
+
+  const handleCardChange = (e) => {
+    const selectedValue = e.target.value;
+    console.log('Selected Card Value:', selectedValue); // Log the selected value
+    setSelectedCard(selectedValue);
+  };
+
   const handleSubmitOrder = () => {
     if (selectedCard) {
+      console.log('Selected Card:', selectedCard); // Log selectedCard state
       onOrderSubmit({
         cart,
         paymentMethod: selectedCard,
@@ -14,7 +25,7 @@ const OrderModal = ({ cart, creditCards, onClose, onOrderSubmit }) => {
       });
       onClose();
     } else {
-      alert('Please select payment method');
+      alert('Please select a payment method');
     }
   };
 
@@ -36,10 +47,11 @@ const OrderModal = ({ cart, creditCards, onClose, onOrderSubmit }) => {
           Credit Card:
           <select
             value={selectedCard}
-            onChange={(e) => setSelectedCard(e.target.value)}
+            onChange={handleCardChange} // Use the handler function
           >
+            <option value="" disabled>Select a card</option>
             {creditCards.map((card) => (
-              <option key={card.id} value={card.id}>
+              <option key={card.cardID} value={card.cardID}>
                 {card.cardNumber} - {card.billAddress}
               </option>
             ))}

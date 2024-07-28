@@ -51,15 +51,6 @@ class Card(models.Model):
     def __str__(self):
         return str(self.cardID)
 
-class Orders(models.Model):
-    orderID = models.AutoField(primary_key=True)
-    prodID = models.ForeignKey(Product, on_delete=models.CASCADE)
-    orderDate = models.DateField()
-    status = models.IntegerField()
-    cardID = models.ForeignKey(Card, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return str(self.orderID)
 
 class Customer(models.Model):
     accountID = models.AutoField(primary_key=True)
