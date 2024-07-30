@@ -51,7 +51,6 @@ class Card(models.Model):
     def __str__(self):
         return str(self.cardID)
 
-
 class Customer(models.Model):
     accountID = models.AutoField(primary_key=True)
     cusName = models.CharField(max_length=255)
@@ -70,3 +69,20 @@ class Staff(models.Model):
 
     def __str__(self):
         return self.staffName
+    
+class ShoppingCart(models.Model):
+    shopCartID = models.AutoField(primary_key=True)
+    accountID = models.ForeignKey(Customer, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return str(self.shopCartID)
+
+class Orders(models.Model):
+    orderID = models.AutoField(primary_key=True)
+    accountID = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    orderDate = models.DateField()
+    status = models.IntegerField()
+    cardID = models.ForeignKey(Card, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return str(self.orderID)

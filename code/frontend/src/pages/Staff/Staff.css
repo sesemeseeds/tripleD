@@ -178,11 +178,11 @@ min-width: 200px;
 }
 
 .add-product-button.disabled {
-  background-color: grey; /* Grey */
+  background-color: grey; 
   cursor: not-allowed;
 }
 
 .add-product-button:disabled {
-  background-color: grey; /* Grey */
+  background-color: grey; 
   cursor: not-allowed;
 }

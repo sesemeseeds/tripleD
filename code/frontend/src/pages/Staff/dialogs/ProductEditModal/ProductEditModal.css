@@ -29,8 +29,8 @@
     padding: 8px;
     border: 1px solid #ddd;
     border-radius: 4px;
-    width: 100%; /* Ensure full width */
-    box-sizing: border-box; /* Include padding and border in width */
+    width: 100%; 
+    box-sizing: border-box; 
 }
 
 .modal-content button {

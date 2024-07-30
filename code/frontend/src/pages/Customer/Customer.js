@@ -11,7 +11,6 @@ const Customer = () => {
   const [prods, setProds] = useState([]);
   const [filteredProds, setFilteredProds] = useState([]);
   const [cart, setCart] = useState([]);
-  const [addresses, setAddresses] = useState([]);
   const [cards, setCards] = useState([]);
   const [orderModalOpen, setOrderModalOpen] = useState(false);
   const [manageCardsModalOpen, setManageCardsModalOpen] = useState(false);
@@ -45,15 +44,6 @@ const Customer = () => {
       setProds(data);
     } catch (error) {
       console.error('Error fetching products:', error);
-    }
-  };
-
-  const fetchAddresses = async () => {
-    try {
-      const { data } = await axios.get('http://localhost:8000/addresses/');
-      setAddresses(data);
-    } catch (error) {
-      console.error('Error fetching addresses:', error);
     }
   };
 
@@ -140,19 +130,18 @@ const Customer = () => {
   
         if (currentWarehouse) {
           const updatedWarehouseQuantity = currentWarehouse.totalQuantity - item.quantity;
-          const encodedAddress = encodeURIComponent(selectedWarehouseAddress); // Encode the address
+          const encodedAddress = encodeURIComponent(selectedWarehouseAddress); 
   
           await axios.put(`http://localhost:8000/warehouses/${encodedAddress}/`, {
-            ...currentWarehouse, // Spread existing warehouse data
+            ...currentWarehouse,
             totalQuantity: updatedWarehouseQuantity
           });
         }
       }
   
-      // Clear cart and close order modal
       setCart([]);
       setOrderModalOpen(false);
-      fetchProds(); // Refresh products to get updated quantities
+      fetchProds();
   
     } catch (error) {
       console.error('Error submitting order:', error);

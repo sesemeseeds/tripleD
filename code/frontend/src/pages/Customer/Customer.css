@@ -3,7 +3,7 @@
     flex-direction: column;
     height: 100vh;
     width: 100%;
-    overflow: hidden; /* Prevent scrolling */
+    overflow: hidden; 
 }
 
 .customer-header {
@@ -194,9 +194,6 @@
 .checkout-button:hover {
   background-color: #e68a00;
 }
-/* Customer.css */
-
-/* Existing styles */
 
 .manage-cards-button,
 .manage-addresses-button {
@@ -206,12 +203,12 @@
   padding: 10px 20px;
   border-radius: 5px;
   cursor: pointer;
-  margin-right: 10px; /* Space between buttons */
+  margin-right: 10px; 
 }
 
 .manage-cards-button:hover,
 .manage-addresses-button:hover {
-  background-color: #5a2d91; /* Darker shade on hover */
+  background-color: #5a2d91; 
 }
 
 .management-buttons {
@@ -223,10 +220,8 @@
   right: 10px;
 }
 
-/* Add this to Customer.css */
-
 .remove-button {
-    background-color: #dc3545; /* Red color */
+    background-color: #dc3545; 
     color: white;
     border: none;
     padding: 10px 20px;
@@ -235,7 +230,7 @@
   }
   
   .remove-button:hover {
-    background-color: #c82333; /* Darker red on hover */
+    background-color: #c82333; 
   }
   
   .cart-summary p {
