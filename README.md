@@ -1,11 +1,11 @@
 
-# TripleD Shopping Application
+# tripleD Shopping Application
 
 **CS4092: Database Design & Development (Team 15)**
 
 ## Project Overview
 
-TripleD is an online shopping application developed for the CS4092 course, utilizing a PostgreSQL database to manage products, availability, customer orders, and staff information.
+tripleD is an online shopping application developed for the CS4092 course, utilizing a React frontend with a Python/PostgreSQL database to manage products, availability, customer orders, and staff information.
 
 ### Project Outputs
 
@@ -38,13 +38,14 @@ TripleD is an online shopping application developed for the CS4092 course, utili
 
 2. **Database Setup**:
    - Install PostgreSQL.
+   - Create new database named 'shop' under default host (localhost) and port 5432
    - Run the scripts in the `sql/` folder to set up the database schema and initial data.
 
 3. **Install Dependencies**:
-   - Navigate to the `code/` directory.
+   - Navigate to the `code/frontend` directory.
    - Install the required dependencies using the package manager (e.g., npm, pip).
 
 4. **Run the Application**:
-   - Start the backend server.
-   - Open the frontend interface in your browser.
+   - Start the backend server in `code/backend` using command ``python3 manage.py runserver`` (have python installed).
+   - Open the frontend interface in your browser using `npm run start` in `code/frontend`.
 
